@@ -1,731 +1,86 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Arturs Lapiņš - Portfolio OS</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        body {
-            font-family: 'VT323', monospace;
-            font-size: 36px;
-            overflow: hidden;
-            background: #008080;
-        }
+  <title>Arturs Lapiņš - Portfolio 2025</title>
+  <meta name="title" content="Arturs Lapiņš">
+  <meta name="description" content="Portfolio of Arturs Lapiņš, major Computer Science. Showcasing projects, experience, and skills.">
 
-        .os-window {
-            width: 100vw;
-            height: 100vh;
-            background: #c0c0c0;
-            border: 2px inset #c0c0c0;
-            display: flex;
-            flex-direction: column;
-        }
+  <style>
+    body {
+      background-color: rgb(0, 0, 0);
+      margin: 0;
+    }
 
-        .title-bar {
-            height: 60px;
-            background: linear-gradient(to right, #1084d0, #70b7e3);
-            color: white;
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-            font-weight: bold;
-            font-size: 32px;
-        }
+    #webgl {
+      pointer-events: none;
+    }
 
-        .menu-bar {
-            height: 70px;
-            background: #c0c0c0;
-            border-bottom: 1px solid #808080;
-            display: flex;
-            align-items: center;
-        }
+    #ui-app {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-sizing: border-box;
+    }
 
-        .menu-item {
-            padding: 18px 35px;
-            cursor: pointer;
-            font-size: 32px;
-            border: 1px transparent solid;
-            white-space: nowrap;
-            min-width: fit-content;
-        }
+    #ui {
+      position: absolute;
+      overflow: hidden;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-sizing: border-box;
+    }
 
-        .menu-item:hover {
-            background: #e0e0e0;
-            border: 1px outset #c0c0c0;
-        }
+    #monitor-videos {
+      pointer-events: none;
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+      top: 0;
+      left: 0;
+    }
 
-        .menu-item.active {
-            background: #d0d0d0;
-            border: 1px inset #c0c0c0;
-        }
+    #css {
+      cursor: pointer;
+    }
 
-        .content-area {
-            flex: 1;
-            background: white;
-            padding: 35px;
-            overflow: auto;
-            position: relative;
-        }
+    #ui-interactive {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 256px;
+    }
 
-        .page {
-            display: none;
-            animation: fadeIn 0.3s ease-in;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .home-header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-
-        .name {
-            font-size: 72px;
-            color: #000080;
-            text-shadow: 3px 3px 0px #808080;
-            margin-bottom: 25px;
-            line-height: 1.2;
-        }
-
-        .title {
-            font-size: 40px;
-            color: #008000;
-            margin-bottom: 45px;
-            line-height: 1.4;
-        }
-
-        .nav-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            max-width: 100%;
-            margin: 0 auto;
-        }
-
-        .nav-button {
-            background: #c0c0c0;
-            border: 2px outset #c0c0c0;
-            padding: 40px 25px;
-            text-align: center;
-            cursor: pointer;
-            font-family: 'VT323', monospace;
-            font-size: 28px;
-            color: #000080;
-            transition: all 0.1s;
-            min-height: 150px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .nav-button:hover {
-            background: #d0d0d0;
-        }
-
-        .nav-button:active {
-            border: 2px inset #c0c0c0;
-        }
-
-        .nav-icon {
-            font-size: 56px;
-            margin-bottom: 15px;
-            display: block;
-        }
-
-        .page-content h2 {
-            color: #000080;
-            font-size: 52px;
-            margin-bottom: 35px;
-            border-bottom: 4px solid #000080;
-            padding-bottom: 20px;
-        }
-
-        .page-content h3 {
-            color: #008000;
-            font-size: 40px;
-            margin: 35px 0 25px 0;
-        }
-
-        .page-content p {
-            font-size: 32px;
-            line-height: 1.6;
-            margin-bottom: 28px;
-            color: #000;
-        }
-
-        .page-content ul {
-            margin: 25px 0;
-            padding-left: 35px;
-        }
-
-        .page-content li {
-            font-size: 32px;
-            line-height: 1.6;
-            margin-bottom: 18px;
-        }
-
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
-            margin: 35px 0;
-        }
-
-        .skill-item {
-            background: #008080;
-            color: white;
-            padding: 25px 15px;
-            text-align: center;
-            border: 1px solid #004040;
-            font-size: 26px;
-            min-height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .contact-info {
-            background: #e0e0e0;
-            border: 1px inset #c0c0c0;
-            padding: 35px;
-            margin: 35px 0;
-        }
-
-        .contact-form {
-            background: #f0f0f0;
-            border: 1px inset #c0c0c0;
-            padding: 35px;
-            margin: 35px 0;
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 12px;
-            font-weight: bold;
-            color: #000080;
-            font-size: 32px;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 20px;
-            font-family: 'VT323', monospace;
-            font-size: 28px;
-            border: 1px inset #c0c0c0;
-            background: white;
-            min-height: 65px;
-        }
-
-        .form-group textarea {
-            height: 150px;
-            resize: vertical;
-        }
-
-        .submit-btn {
-            background: #c0c0c0;
-            border: 2px outset #c0c0c0;
-            padding: 22px 30px;
-            font-family: 'VT323', monospace;
-            font-size: 32px;
-            color: #000080;
-            cursor: pointer;
-            min-height: 75px;
-        }
-
-        .submit-btn:hover {
-            background: #d0d0d0;
-        }
-
-        .submit-btn:active {
-            border: 2px inset #c0c0c0;
-        }
-
-        .project-item {
-            background: #f0f0f0;
-            border: 1px outset #c0c0c0;
-            padding: 35px;
-            margin: 35px 0;
-        }
-
-        .status-bar {
-            height: 45px;
-            background: #c0c0c0;
-            border-top: 1px solid #808080;
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-            font-size: 26px;
-        }
-
-        .clock {
-            margin-left: auto;
-        }
-
-        /* Mobile optimizations */
-        @media (max-width: 768px) {
-            body {
-                font-size: 42px;
-            }
-            
-            .name {
-                font-size: 64px;
-            }
-            
-            .title {
-                font-size: 38px;
-            }
-            
-            .content-area {
-                padding: 25px;
-            }
-            
-            .nav-grid {
-                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-                gap: 18px;
-            }
-            
-            .nav-button {
-                padding: 35px 20px;
-                font-size: 26px;
-                min-height: 140px;
-            }
-            
-            .nav-icon {
-                font-size: 48px;
-            }
-            
-            .page-content h2 {
-                font-size: 48px;
-            }
-            
-            .page-content h3 {
-                font-size: 38px;
-            }
-            
-            .page-content p, 
-            .page-content li {
-                font-size: 30px;
-            }
-            
-            .menu-item {
-                font-size: 30px;
-                padding: 15px 25px;
-            }
-            
-            .skills-grid {
-                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            }
-            
-            .skill-item {
-                font-size: 24px;
-                padding: 20px 12px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            body {
-                font-size: 48px;
-            }
-            
-            .name {
-                font-size: 56px;
-            }
-            
-            .title {
-                font-size: 34px;
-            }
-            
-            .nav-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 15px;
-            }
-            
-            .nav-button {
-                font-size: 24px;
-                min-height: 130px;
-                padding: 30px 15px;
-            }
-            
-            .nav-icon {
-                font-size: 42px;
-            }
-            
-            .page-content h2 {
-                font-size: 44px;
-            }
-            
-            .page-content h3 {
-                font-size: 36px;
-            }
-            
-            .page-content p, 
-            .page-content li {
-                font-size: 28px;
-            }
-            
-            .menu-item {
-                font-size: 28px;
-                padding: 12px 20px;
-            }
-        }
-    </style>
+    video {
+      position: absolute;
+      top: 0;
+      pointer-events: none;
+    }
+  </style>
 </head>
+
 <body>
-    <div class="os-window">
-        <div class="title-bar">
-            Arturs Lapiņš - Portfolio Showcase 2025
-        </div>
-        
-        <div class="menu-bar">
-            <div class="menu-item active" onclick="showPage('home', event)">HOME</div>
-            <div class="menu-item" onclick="showPage('about', event)">ABOUT</div>
-            <div class="menu-item" onclick="showPage('experience', event)">EXPERIENCE</div>
-            <div class="menu-item" onclick="showPage('projects', event)">PROJECTS</div>
-            <div class="menu-item" onclick="showPage('contact', event)">CONTACT</div>
-        </div>
-
-        <div class="content-area">
-            <!-- HOME PAGE -->
-            <div id="home" class="page active">
-                <div class="home-header">
-                    <div class="name">ARTURS LAPIŅŠ</div>
-                    <div class="title">DEVELOPER & COMPUTER SCIENCE STUDENT</div>
-                </div>
-                
-                <div class="nav-grid">
-                    <div class="nav-button" onclick="showPage('about', event)">
-                        <span class="nav-icon">👨‍💻</span>
-                        ABOUT ME
-                    </div>
-                    <div class="nav-button" onclick="showPage('experience', event)">
-                        <span class="nav-icon">🎓</span>
-                        EXPERIENCE
-                    </div>
-                    <div class="nav-button" onclick="showPage('projects', event)">
-                        <span class="nav-icon">💻</span>
-                        PROJECTS
-                    </div>
-                    <div class="nav-button" onclick="showPage('contact', event)">
-                        <span class="nav-icon">📧</span>
-                        CONTACT
-                    </div>
-                </div>
-                <!-- Falling Blocks Survival Game -->
-                <div style="margin-top: 60px; text-align: center;">
-                  <div id="falling-blocks-score" style="color: #000080; font-size: 32px; margin-bottom:8px;">Score: 0</div>
-                  <canvas id="falling-blocks-canvas" width="400" height="450" style="background:#2e4053; border-radius:7px; margin-bottom:8px;"></canvas>
-                  <div id="falling-blocks-gameover" style="display:none; color: #e05353; font-size: 34px; margin:14px;">
-                    Game Over!<br>
-                    <button onclick="fallingBlocksRestart()" style="font-size:24px;padding:10px 24px;border-radius:5px;margin-top:10px;border:none;background:#008080;color:#fff;">Restart</button>
-                  </div>
-                  <div style="color: #555; font-size: 24px; margin-top: 10px;">Use ← → arrow keys to move</div>
-                </div>
-            </div>
-
-            <!-- ABOUT PAGE -->
-            <div id="about" class="page">
-                <div class="page-content">
-                    <h2>ABOUT ME</h2>
-                    <p>My name is <strong>Arturs Lapiņš</strong>, and for as long as I can remember I have been fascinated by technology—especially computers, their structure, and the endless possibilities of what can be achieved with them.</p>
-                    
-                    <p>When I was 14, I received my very first computer, and that moment marked the beginning of my journey into developing practical skills in the field.</p>
-                    
-                    <p>Over time, I designed logos for individual clients and began exploring 3D modeling with <strong>Blender</strong>, experimenting with how to create models and bring ideas to life in a virtual environment.</p>
-                    
-                    <p>I am currently studying <strong>Computer Systems</strong> at Riga Technical University's Liepāja branch, where I continue to deepen my knowledge in programming and system design.</p>
-                    
-                    <h3>TECHNICAL SKILLS</h3>
-                    <div class="skills-grid">
-                        <div class="skill-item">C / C++</div>
-                        <div class="skill-item">JAVA</div>
-                        <div class="skill-item">PYTHON</div>
-                        <div class="skill-item">JAVASCRIPT</div>
-                        <div class="skill-item">HTML/CSS</div>
-                        <div class="skill-item">BLENDER</div>
-                        <div class="skill-item">PHOTOSHOP</div>
-                        <div class="skill-item">ILLUSTRATOR</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- EXPERIENCE PAGE -->
-            <div id="experience" class="page">
-                <div class="page-content">
-                    <h2>EXPERIENCE</h2>
-                    
-                    <div class="project-item">
-                        <h3>Freelance Logo Designer</h3>
-                        <p>• Designed logos and branding materials for individual clients</p>
-                        <p>• Communicated with clients to understand requirements and deliver customized solutions</p>
-                        <p>• Improved design workflow using Adobe Illustrator, Photoshop, and GIMP</p>
-                    </div>
-                    
-                    <div class="project-item">
-                        <h3>3D Modeling Projects (Self-Initiated)</h3>
-                        <p>• Learned and applied Blender for creating 3D models and visual concepts</p>
-                        <p>• Experimented with different modeling techniques and rendering methods</p>
-                        <p>• Built a portfolio of small creative projects</p>
-                    </div>
-                    
-                    <div class="project-item">
-                        <h3>Computer Systems Practice (Personal Projects)</h3>
-                        <p>• Built, configured, and maintained personal computers</p>
-                        <p>• Explored software installation, troubleshooting, and optimization</p>
-                        <p>• Developed interest in programming and system design through hands-on practice</p>
-                    </div>
-                    
-                    <h3>EDUCATION</h3>
-                    <p><strong>Computer Systems Student</strong> | 2023 - Present</p>
-                    <p>Riga Technical University, Liepāja branch - Currently in second year, focusing on programming, system design, and computer science fundamentals.</p>
-                </div>
-            </div>
-
-            <!-- PROJECTS PAGE -->
-            <div id="projects" class="page">
-                <div class="page-content">
-                    <h2>PROJECTS</h2>
-                    
-                    <div class="project-item">
-                        <h3>3D Interactive Portfolio</h3>
-                        <p>Modern portfolio website built with Three.js, TypeScript, and React. Features immersive 3D environment with interactive elements and custom OS interface.</p>
-                        <p><strong>Tech:</strong> Three.js, TypeScript, React, Webpack, Blender</p>
-                    </div>
-                    
-                    <div class="project-item">
-                        <h3>Logo Design Portfolio</h3>
-                        <p>Collection of logos and branding materials created for various clients. Demonstrates proficiency in visual design and client communication.</p>
-                        <p><strong>Tech:</strong> Adobe Illustrator, Photoshop, GIMP</p>
-                    </div>
-                    
-                    <div class="project-item">
-                        <h3>3D Modeling Collection</h3>
-                        <p>Various 3D models and visualizations created as learning projects and creative experiments using Blender.</p>
-                        <p><strong>Tech:</strong> Blender, 3D Modeling, Rendering</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CONTACT PAGE -->
-            <div id="contact" class="page">
-                <div class="page-content">
-                    <h2>CONTACT</h2>
-                    
-                    <div class="contact-info">
-                        <h3>GET IN TOUCH</h3>
-                        <p><strong>Email:</strong> arturs@codebylapins.com</p>
-                        <p><strong>Location:</strong> Liepāja, Latvija</p>
-                        <p><strong>Studies:</strong> RTU Liepāja - Computer Systems</p>
-                    </div>
-                    
-                    <div class="contact-form">
-                        <h3>SEND MESSAGE</h3>
-                        <div class="form-group">
-                            <label for="email">Your Email:</label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="message">Message:</label>
-                            <textarea id="message" name="message" required placeholder="Tell me about your project..."></textarea>
-                        </div>
-                        <button type="submit" class="submit-btn" onclick="sendMessage()">SEND MESSAGE</button>
-                    </div>
-                    
-                    <p>Interested in collaboration or have a project in mind? Feel free to reach out! I'm always open to discussing new opportunities and interesting projects.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="status-bar">
-            <span class="clock" id="clock">00:00:00</span>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script>
-        // Initialize EmailJS
-        (function(){
-            emailjs.init("O6rCnAM1omC4ZI_Fr");
-        })();
-
-        function showPage(pageId, event) {
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-            });
-            document.querySelectorAll('.menu-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            document.getElementById(pageId).classList.add('active');
-            if (event && event.target) event.target.classList.add('active');
-        }
-
-        function sendMessage() {
-            const email = document.getElementById('email').value;
-            const message = document.getElementById('message').value;
-            if (email && message) {
-                // EmailJS send
-                emailjs.send("service_ylagbep", "template_z4rwbmk", {
-                    from_email: email,
-                    message: message,
-                    to_email: "arturs@codebylapins.com"
-                })
-                .then(function(response) {
-                    alert('Message sent successfully!');
-                    document.getElementById('email').value = '';
-                    document.getElementById('message').value = '';
-                }, function(error) {
-                    alert('Failed to send message. Please try again.');
-                    console.log('EmailJS error:', error);
-                });
-            } else {
-                alert('Please fill in both email and message fields.');
-            }
-        }
-
-        function updateClock() {
-            const now = new Date();
-            const time = now.toTimeString().slice(0, 8);
-            document.getElementById('clock').textContent = time;
-        }
-
-        setInterval(updateClock, 1000);
-        updateClock();
-    </script>
-    <!-- ENHANCED FALLING BLOCKS SURVIVAL GAME SCRIPT -->
-    <script>
-    (function(){
-      const canvas = document.getElementById('falling-blocks-canvas');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      const scoreDiv = document.getElementById('falling-blocks-score');
-      const gameoverDiv = document.getElementById('falling-blocks-gameover');
-      const playerWidth = 40, playerHeight = 18;
-      let playerX = (canvas.width-playerWidth)/2;
-      const playerY = canvas.height - playerHeight - 6;
-      let leftArrow = false, rightArrow = false;
-      let blocks = [];
-      let speed = 2.3;
-      let score = 0;
-      let gameover = false;
-      let tick = 0;
-      
-      function drawPlayer() {
-        ctx.fillStyle = '#00fa81';
-        ctx.fillRect(playerX, playerY, playerWidth, playerHeight);
-      }
-      
-      function drawBlocks() {
-        ctx.fillStyle = '#ff4747';
-        for (let b of blocks) ctx.fillRect(b.x, b.y, b.size, b.size);
-      }
-      
-      function updateBlocks() {
-        for (let b of blocks) b.y += b.speed;
-        // Remove off-screen blocks and increment score
-        let removed = 0;
-        blocks = blocks.filter(b => {
-          if (b.y > canvas.height) { removed++; return false; }
-          return true;
-        });
-        if (removed > 0) {
-          score += removed;
-          scoreDiv.innerText = "Score: " + score;
-          if (score % 5 === 0) speed += 0.5; // Increase speed every 5 points, faster acceleration
-        }
-      }
-      
-      function spawnBlockBatch(n) {
-        for (let i = 0; i < n; i++) {
-          const blockSize = 40;
-          const x = Math.random() * (canvas.width-blockSize);
-          const delay = Math.random() * 20; // Random delay for staggered spawning
-          blocks.push({x, y: -blockSize - delay, size:blockSize, speed:speed});
-        }
-      }
-      
-      function detectCollisions() {
-        for (let b of blocks) {
-          if (
-            b.y + b.size > playerY &&
-            b.y < playerY + playerHeight &&
-            b.x < playerX + playerWidth &&
-            b.x + b.size > playerX
-          ) {
-            gameover = true;
-            gameoverDiv.style.display = 'block';
-          }
-        }
-      }
-      
-      function loop() {
-        if (gameover) return;
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-        
-        if (leftArrow && playerX > 0) playerX -= 7;
-        if (rightArrow && playerX < canvas.width-playerWidth) playerX += 7;
-        
-        drawPlayer();
-        drawBlocks();
-        updateBlocks();
-        detectCollisions();
-        
-        tick++;
-        // Spawn blocks more frequently and in smaller batches for faster gameplay
-        if (tick % 35 === 0) { // Every 35 frames (~0.6 sec at 60fps)
-          let toSpawn = Math.floor(1 + score/20); // Fewer blocks but faster pace
-          if (toSpawn > 3) toSpawn = 3; // Cap at 3 blocks max
-          spawnBlockBatch(toSpawn);
-        }
-        
-        requestAnimationFrame(loop);
-      }
-      
-      function fallingBlocksRestart() {
-        blocks = [];
-        playerX = (canvas.width-playerWidth)/2;
-        speed = 2.3; 
-        score = 0; 
-        gameover = false; 
-        tick = 0;
-        gameoverDiv.style.display = "none";
-        scoreDiv.innerText = "Score: 0";
-        spawnBlockBatch(2); // Start with 2 blocks
-        requestAnimationFrame(loop);
-      }
-      
-      window.fallingBlocksRestart = fallingBlocksRestart;
-      
-      document.addEventListener('keydown', function(e){
-        if (e.code==='ArrowLeft') leftArrow=true;
-        if (e.code==='ArrowRight') rightArrow=true;
-      });
-      
-      document.addEventListener('keyup', function(e){
-        if (e.code==='ArrowLeft') leftArrow=false;
-        if (e.code==='ArrowRight') rightArrow=false;
-      });
-      
-      fallingBlocksRestart();
-    })();
-    </script>
+  <div id="css"></div>
+  <div id="webgl"></div>
+  <div id="overlay"></div>
+  <div id="ui-interactive"></div>
+  <div id="ui"></div>
+  <div id="monitor-videos">
+    <video id="video-1" muted loop autoplay width="0" height="0" src="../static/textures/monitor/video/base-static.mp4" style="opacity: 0;"></video>
+    <video id="video-2" muted loop autoplay width="0" height="0" src="../static/textures/monitor/video/static-texture-layer.mp4" style="opacity: 0;"></video>
+  </div>
 </body>
+
 </html>
